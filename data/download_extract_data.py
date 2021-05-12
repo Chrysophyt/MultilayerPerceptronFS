@@ -38,21 +38,3 @@ def checkDataset():
 
 if __name__ == '__main__':
     checkDataset()
-    
-
-    # #Check if dataset available
-    # if(not os.path.isfile(datasetfName)):
-    #     if(downloadFlowerData() == -1):
-    #         quit()
-    # else:
-    #     print('Dataset already exists.')
-
-    # #Check if path available
-    # if(not os.path.isdir('jpg')):
-    #     print("Extracting Dataset.")
-    #     tar = tarfile.open(datasetfName, "r:gz")
-    #     tar.extractall()
-    #     tar.close()
-    #     print("Done")
-    # else:
-    #     print('Directory already exists.')
