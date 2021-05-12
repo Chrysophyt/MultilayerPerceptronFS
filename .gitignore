@@ -1,2 +1,4 @@
-data/jpg
+flowers
 *.tgz
+*.zip
+__pycache__
