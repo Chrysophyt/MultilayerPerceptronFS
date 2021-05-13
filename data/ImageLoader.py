@@ -1,4 +1,4 @@
-import os
+import os, fnmatch
 from PIL import Image
 import numpy as np
 import random
@@ -28,7 +28,8 @@ def getImages(label, n=100):
         return -1
     
     # Get all images address
-    allFiles = os.listdir(path)
+    allFiles = fnmatch.filter(os.listdir(path), '*.jpg')
+
     usedFiles = random.sample(allFiles, n) # get 100 samples from allFiles
 
     # Read the data into numpy array
@@ -48,7 +49,7 @@ def preprocessImage(images):
     Normalize data value from int [0, 255] -> float [0,1]"""
 
     x = images.reshape(*images.shape[:1], -1) #(100, 76800)
-    x /= 255.0
+    x = x/255.0
     return x
 
 
