@@ -39,7 +39,7 @@ def getImages(label, n=100):
         img = img.resize((320,240), Image.ANTIALIAS)
         imagesRGB.append(np.asarray(img))
     
-    imagesRGB = np.asarray(imagesRGB) #(100, 240, 320, 3)
+    imagesRGB = np.asarray(imagesRGB) #(n, 240, 320, 3)
 
     return imagesRGB
 

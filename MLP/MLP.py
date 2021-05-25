@@ -21,7 +21,7 @@ class ActivationSigmoid:
         self.output = 1/ (1+np.exp(-inputs))
 
     def backward(self, dvalues):
-        self.dinputs = dvalues * (1-self.ouput) * self.output
+        self.dinputs = dvalues * (1-self.output) * self.output
 
     def predictions(self, outputs):
         return (outputs> 0.5) * 1
@@ -29,9 +29,10 @@ class ActivationSigmoid:
 class ActivationSoftmax:
     def forward(self, inputs):
         self.inputs = inputs
+
         exp_values = np.exp(inputs - np.max(inputs, axis=1, keepdims=True))
         probabilities = exp_values / np.sum(exp_values, axis=1, keepdims=True)
-        self.output = probabilities
+        self.output = probabilities 
 
 class ActivationReLU:
 
@@ -50,15 +51,30 @@ class ActivationReLU:
 
         # Zero gradient where input values were negative
         self.dinputs[self.inputs <= 0] = 0
+        
+class BinaryCrossEntropyLoss:
+    def forward(self, y_pred, y_true):
+        y_pred_clipped = np.clip(y_pred, 1e-7, 1 - 1e-7)
+        sample_losses = -(y_true * np.log(y_pred_clipped) + (1 - y_true) * np.log(1 - y_pred_clipped))
+        sample_losses = np.mean(sample_losses, axis=-1)
 
+        # Return losses
+        return sample_losses
+
+    # Backward pass
+    def backward(self, dvalues, y_true):
+        samples = len(dvalues)
+        outputs = len(dvalues[0])
+        clipped_dvalues = np.clip(dvalues, 1e-7, 1 - 1e-7)
+
+        self.dinputs = -(y_true / clipped_dvalues - (1 - y_true) / (1 - clipped_dvalues)) / outputs
+        self.dinputs = self.dinputs / samples
 
 class CategoricalCrossEntropyLoss:
-
-
     def forward(self, y_pred, y_true):
         y_pred_clipped = np.clip(y_pred, 1e-7, 1 - 1e-7) #prevent log(0)
         correct_confidences = np.sum(y_pred_clipped * y_true, axis=1)
-
+        
         # Losses
         CEntropy = -np.log(correct_confidences)
         return CEntropy 
